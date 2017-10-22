@@ -36,7 +36,7 @@ ARG VCS_URL
 
 COPY --from=src /php.tar.xz .
 
-LABEL maintainer "Nev Stokes <mail@nevstokes.com>" \
+LABEL maintainer="Nev Stokes <mail@nevstokes.com>" \
     description="Verified latest source of PHP v7.1" \
     org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.schema-version="1.0" \
