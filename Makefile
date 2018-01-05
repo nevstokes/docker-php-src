@@ -3,6 +3,7 @@ DOCKER_REPO = nevstokes/php-src
 export
 
 .DEFAULT_GOAL := help
+
 .PHONY: build help pre-build
 
 help: ## Displays list and descriptions of available targets

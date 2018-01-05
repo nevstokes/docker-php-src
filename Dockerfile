@@ -1,4 +1,4 @@
-FROM nevstokes/php-version-hashes AS hashes
+FROM nevstokes/php-src:hashes AS hashes
 
 
 FROM php-src-fetchdeps AS fetchdeps
