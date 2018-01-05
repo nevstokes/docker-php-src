@@ -14,7 +14,7 @@ RUN read PHP_VERSION PHP_HASH < /tmp/versioninfo \
     && wget -q https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror -O php.tar.xz.asc \
     && echo "$PHP_HASH *php.tar.xz" | sha256sum -c -
 
-#RUN gpg --batch --verify php.tar.xz.asc php.tar.xz
+RUN gpg --batch --verify php.tar.xz.asc php.tar.xz
 
 
 FROM scratch
