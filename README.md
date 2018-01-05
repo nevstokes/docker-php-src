@@ -1,3 +1,5 @@
-# PHP Version and Hashes
+# PHP Version numbers and Hashes
+
+[![](https://images.microbadger.com/badges/version/nevstokes/php-src:hashes.svg)](https://microbadger.com/images/nevstokes/php-src:hashes "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/nevstokes/php-src:hashes.svg)](https://microbadger.com/images/nevstokes/php-src:hashes "Get your own commit badge on microbadger.com") [![](https://images.microbadger.com/badges/image/nevstokes/php-src:hashes.svg)](https://microbadger.com/images/nevstokes/php-src:hashes "Get your own image badge on microbadger.com")
 
 Small Docker image containing a single file — `versioninfo` — which contains a list of the latest supported PHP version numbers and their associated checksum hashes, extracted from the PHP release [RSS feed](https://secure.php.net/releases/feed.php).
