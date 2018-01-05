@@ -1,0 +1,5 @@
+#!/bin/bash
+
+docker build \
+    -t php-src-fetchdeps . \
+    -f Dockerfile.fetchdeps

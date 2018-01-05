@@ -1,0 +1,14 @@
+#!/bin/bash
+
+id=$(docker create nevstokes/php-version-hashes /)
+docker cp $id:/versioninfo - | tar -xf - > versioninfo
+docker rm -v $id > /dev/null
+
+latestVersion=`cat versioninfo | sed -E 's/^([0-9]+\.[0-9]+).*/\1/' | sort -rg -t. -k1,1 -k2,2 | head -1`
+
+if [ "$latestVersion" = "$CACHE_TAG" ]; then
+    docker tag $IMAGE_NAME $DOCKER_REPO:latest
+    docker push $DOCKER_REPO:latest
+fi
+
+rm versioninfo
