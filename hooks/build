@@ -1,12 +1,19 @@
 #!/bin/bash
 
-id=$(docker create nevstokes/php-version-hashes /)
+id=$(docker create nevstokes/php-src:hashes /)
 docker cp $id:/versioninfo - | tar -xf - > versioninfo
 docker rm -v $id > /dev/null
 
-LATEST_VERSION=`head -1 versioninfo | cut -f 1 | sed -E 's/^([0-9]+\.[0-9]+).*/\1/'`
+if [ $PHP_VERSION ]; then
 
-if [ -z "$PHP_VERSION"]; then
+    docker build --no-cache \
+        --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+        --build-arg VCS_REF=`git rev-parse --short HEAD` \
+        --build-arg VCS_URL=`git config --get remote.origin.url` \
+        --build-arg PHP_SRC_VERSION=$PHP_VERSION \
+        -t $DOCKER_REPO:$PHP_VERSION .
+
+else
 
     while read PHP_FULL_VERSION PHP_HASH ; do
         PHP_VERSION=`echo $PHP_FULL_VERSION | sed -E 's/^([0-9]+\.[0-9]+).*/\1/'`
@@ -20,15 +27,6 @@ if [ -z "$PHP_VERSION"]; then
             -t $DOCKER_REPO:$PHP_VERSION .
 
     done < versioninfo
-
-else
-
-    docker build --no-cache \
-        --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-        --build-arg VCS_REF=`git rev-parse --short HEAD` \
-        --build-arg VCS_URL=`git config --get remote.origin.url` \
-        --build-arg PHP_SRC_VERSION=$PHP_VERSION \
-        -t $DOCKER_REPO:$PHP_VERSION .
 
 fi
 
