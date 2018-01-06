@@ -4,6 +4,8 @@ id=$(docker create nevstokes/php-src:hashes /)
 docker cp $id:/versioninfo - | tar -xf - > versioninfo
 docker rm -v $id > /dev/null
 
+latestVersion=`cat versioninfo | sed -E 's/^([0-9]+\.[0-9]+).*/\1/' | sort -rg -t. -k1,1 -k2,2 | head -1`
+
 if [ $PHP_VERSION ]; then
 
     docker build --no-cache \
@@ -13,9 +15,11 @@ if [ $PHP_VERSION ]; then
         --build-arg PHP_SRC_VERSION=$PHP_VERSION \
         -t $DOCKER_REPO:$PHP_VERSION .
 
-else
+    if [ "$latestVersion" = "$PHP_VERSION" ]; then
+        docker tag $DOCKER_REPO:$PHP_VERSION $DOCKER_REPO:latest
+    fi
 
-    latestVersion=`cat versioninfo | sed -E 's/^([0-9]+\.[0-9]+).*/\1/' | sort -rg -t. -k1,1 -k2,2 | head -1`
+else
 
     while read PHP_FULL_VERSION PHP_HASH ; do
         PHP_VERSION=`echo $PHP_FULL_VERSION | sed -E 's/^([0-9]+\.[0-9]+).*/\1/'`
