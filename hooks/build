@@ -8,11 +8,14 @@ latestVersion=`cat versioninfo | sed -E 's/^([0-9]+\.[0-9]+).*/\1/' | sort -rg -
 
 if [ $PHP_VERSION ]; then
 
+    phpFullVersion=`grep -F $PHP_VERSION. versioninfo | cut -d ' ' -f 1`
+
     docker build --no-cache \
         --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
         --build-arg VCS_REF=`git rev-parse --short HEAD` \
         --build-arg VCS_URL=`git config --get remote.origin.url` \
         --build-arg PHP_SRC_VERSION=$PHP_VERSION \
+        --build-arg PHP_VERSION_FULL=$phpFullVersion \
         -t $DOCKER_REPO:$PHP_VERSION .
 
     if [ "$latestVersion" = "$PHP_VERSION" ]; then
@@ -21,8 +24,8 @@ if [ $PHP_VERSION ]; then
 
 else
 
-    while read PHP_FULL_VERSION PHP_HASH ; do
-        PHP_VERSION=`echo $PHP_FULL_VERSION | sed -E 's/^([0-9]+\.[0-9]+).*/\1/'`
+    while read PHP_VERSION_FULL PHP_HASH ; do
+        PHP_VERSION=`echo $PHP_VERSION_FULL | sed -E 's/^([0-9]+\.[0-9]+).*/\1/'`
         echo "Building PHP v$PHP_VERSION . . ."
 
         docker build --no-cache \
@@ -30,6 +33,7 @@ else
             --build-arg VCS_REF=`git rev-parse --short HEAD` \
             --build-arg VCS_URL=`git config --get remote.origin.url` \
             --build-arg PHP_SRC_VERSION=$PHP_VERSION \
+            --build-arg PHP_VERSION_FULL=$PHP_VERSION_FULL \
             -t $DOCKER_REPO:$PHP_VERSION .
 
         if [ $IMAGE_NAME ]; then
