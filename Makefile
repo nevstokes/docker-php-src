@@ -14,4 +14,3 @@ pre-build: ## Create Docker image with dependencies for fetching source
 
 build: pre-build ## Build the Docker image
 	@./hooks/build
-	@./hooks/post_push
