@@ -1,12 +1,14 @@
 FROM alpine:3.6 AS src
 
-RUN apk --update add --no-cache \
+# Keys taken from https://secure.php.net/gpg-keys.php
+RUN apk update --update-cache && apk add --upgrade --no-cache \
         ca-certificates \
         gnupg \
-        libressl
-
-# Taken from https://secure.php.net/gpg-keys.php
-RUN for key in \
+        libressl \
+    \
+    && update-ca-certificates \
+    \
+    && for key in \
         1729F83938DA44E27BA0F4D3DBDB397470D12172 \
         B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F \
         A917B1ECDA84AEC2B568FED6F50ABC807BD5DCD0 \
@@ -17,4 +19,6 @@ RUN for key in \
         0B96609E270F565C13292B24C13C70B87267B52D \
     ; do \
         gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" ; \
-   done
+   done \
+   \
+   && rm -rf /var/cache/apk
