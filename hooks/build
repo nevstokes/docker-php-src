@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 id=$(docker create nevstokes/php-src:hashes /)
 docker cp $id:/versioninfo - | tar -xf - > versioninfo
