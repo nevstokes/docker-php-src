@@ -2,9 +2,8 @@ FROM alpine:3.7 AS src
 
 COPY version.xsl .
 
-RUN apk update && apk add \
+RUN apk --update-cache upgrade && apk add \
         ca-certificates \
-        libressl \
         libxslt-dev
 
 RUN wget -q https://secure.php.net/releases/feed.php -O - | xsltproc version.xsl - > versioninfo
