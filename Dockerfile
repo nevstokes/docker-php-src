@@ -1,17 +1,14 @@
-FROM nevstokes/php-src:hashes AS hashes
-
-
-FROM php-src-fetchdeps AS fetchdeps
+FROM nevstokes/php-src-fetchdeps AS fetchdeps
 
 ARG PHP_SRC_VERSION
 
-COPY --from=hashes /versioninfo .
+COPY --from=nevstokes/php-src:hashes /versioninfo .
 
 RUN if [ -z "${PHP_SRC_VERSION}" ]; then head -1 versioninfo > /tmp/versioninfo ; else grep -F ${PHP_SRC_VERSION}. versioninfo > /tmp/versioninfo ; fi
 
 RUN read PHP_VERSION PHP_HASH < /tmp/versioninfo \
-    && wget -q https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror -O php.tar.xz \
-    && wget -q https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror -O php.tar.xz.asc \
+    && axel -qo php.tar.xz https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror \
+    && axel -qo php.tar.xz.asc https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror \
     && echo "$PHP_HASH *php.tar.xz" | sha256sum -c -
 
 RUN gpg --batch --verify php.tar.xz.asc php.tar.xz
