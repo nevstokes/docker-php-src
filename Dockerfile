@@ -6,6 +6,8 @@ RUN apk --update-cache upgrade && apk add \
         ca-certificates \
         libxslt-dev
 
+RUN update-ca-certificates
+
 RUN wget -q https://secure.php.net/releases/feed.php -O - | xsltproc version.xsl - > versioninfo
 
 FROM scratch
