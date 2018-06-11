@@ -1,37 +1,20 @@
-FROM nevstokes/php-src:hashes AS hashes
+FROM nevstokes/fetchdeps
 
+# PHP release manager GnuPG key fingerprints as per https://secure.php.net/gpg-keys.php
 
-FROM php-src-fetchdeps AS fetchdeps
-
-ARG PHP_SRC_VERSION
-
-COPY --from=hashes /versioninfo .
-
-RUN if [ -z "${PHP_SRC_VERSION}" ]; then head -1 versioninfo > /tmp/versioninfo ; else grep -F ${PHP_SRC_VERSION}. versioninfo > /tmp/versioninfo ; fi
-
-RUN read PHP_VERSION PHP_HASH < /tmp/versioninfo \
-    && wget -q https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror -O php.tar.xz \
-    && wget -q https://secure.php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror -O php.tar.xz.asc \
-    && echo "$PHP_HASH *php.tar.xz" | sha256sum -c -
-
-RUN gpg --batch --verify php.tar.xz.asc php.tar.xz
-
-
-FROM scratch
-
-ARG PHP_SRC_VERSION
-ARG PHP_VERSION_FULL
-
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VCS_URL
-
-COPY --from=fetchdeps /php.tar.xz .
-
-LABEL maintainer="Nev Stokes <mail@nevstokes.com>" \
-    description="Verified latest source of PHP v$PHP_SRC_VERSION" \
-    php.version.full="$PHP_VERSION_FULL" \
-    org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="1.0" \
-    org.label-schema.vcs-url=$VCS_URL \
-    org.label-schema.vcs-ref=$VCS_REF
+RUN for key in \
+        CBAF69F173A0FEA4B537F470D66C9593118BCCB6 \
+        F38252826ACD957EF380D39F2F7956BC5DA04B5D \
+        1729F83938DA44E27BA0F4D3DBDB397470D12172 \
+        B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F \
+        A917B1ECDA84AEC2B568FED6F50ABC807BD5DCD0 \
+        528995BFEDFBA7191D46839EF9BA0ADA31CBD89E \
+        1A4E8B7277C42E53DBA9C7B9BCAA30EA9C0D5763 \
+        6E4F6AB321FDC07F2C332E3AC2BF0BC433CFC8B3 \
+        0BD78B5F97500D450838F95DFE857D9A90D90EC1 \
+        0B96609E270F565C13292B24C13C70B87267B52D \
+    ; do \
+        gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" ; \
+    done \
+    \
+    && rm -f /var/cache/apk/*.tar.gz
