@@ -1,4 +1,4 @@
-FROM alpine:3.6 AS src
+FROM alpine:3.7 AS src
 
 COPY version.xsl .
 
@@ -17,9 +17,8 @@ ARG VCS_URL
 
 COPY --from=src /versioninfo .
 
-LABEL maintainer="Nev Stokes <mail@nevstokes.com>" \
-    description="PHP release versions and hashes" \
-    org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.schema-version="1.0" \
-    org.label-schema.vcs-url=$VCS_URL \
-    org.label-schema.vcs-ref=$VCS_REF
+LABEL org.opencontainers.image.authors="Nev Stokes <mail@nevstokes.com>" \
+    org.opencontainers.image.description="Current PHP release versions and hashes" \
+    org.opencontainers.image.created=$BUILD_DATE \
+    org.opencontainers.image.source=$VCS_URL \
+    org.opencontainers.image.revision=$VCS_REF
