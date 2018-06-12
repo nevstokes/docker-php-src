@@ -1,4 +1,14 @@
+language: generic
+
 sudo: required
 
 services:
   - docker
+
+addons:
+  apt:
+    packages:
+      - xsltproc
+
+script:
+  - make build
