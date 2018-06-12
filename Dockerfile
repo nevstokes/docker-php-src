@@ -1,4 +1,4 @@
-FROM nevstokes/php-src-fetchdeps AS fetchdeps
+FROM nevstokes/php-src:fetchdeps AS fetchdeps
 
 ARG PHP_SRC_VERSION
 
