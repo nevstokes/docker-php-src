@@ -10,5 +10,8 @@ addons:
     packages:
       - xsltproc
 
+before_install:
+  - docker pull nevstokes/php-src:hashes
+
 script:
   - make build
