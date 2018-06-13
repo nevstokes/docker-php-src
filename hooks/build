@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-#lastBuild=$(docker inspect --format "{{ index .Metadata.LastTagTime }}" nevstokes/php-src:hashes)
-
 feedUpdated=$(date -d $(wget -q https://secure.php.net/releases/feed.php -O - | xsltproc updated.xsl -) +%s)
 imageBuilt=$(date -d $(docker inspect --format "{{ index .Config.Labels \"org.opencontainers.image.created\" }}" nevstokes/php-src:hashes) +%s)
 
