@@ -9,6 +9,11 @@ if [ $feedUpdated -ge $imageBuilt ]; then
         --build-arg VCS_REF=`git rev-parse --short HEAD` \
         --build-arg VCS_URL=`git config --get remote.origin.url` \
         -t $IMAGE_NAME .
+
+    if [[ $DOCKER_USERNAME && $DOCKER_PASSWORD ]]; then
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker push $IMAGE_NAME
+    fi
 else
     echo "No need to update version info"
 fi
