@@ -13,6 +13,9 @@ if [ $feedUpdated -ge $imageBuilt ]; then
     if [[ $DOCKER_USERNAME && $DOCKER_PASSWORD ]]; then
         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         docker push $IMAGE_NAME
+
+        # New PHP versions are available; trigger a build of source images
+        curl -H "Content-Type: application/json" --data '{"docker_tag": "latest"}' -X POST https://registry.hub.docker.com/u/nevstokes/php-src/trigger/$TRIGGER_TOKEN/
     fi
 else
     echo "No need to update version info"
