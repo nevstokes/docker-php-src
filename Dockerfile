@@ -27,6 +27,7 @@ COPY --from=fetchdeps /php.tar.xz .
 
 LABEL org.opencontainers.image.authors="Nev Stokes <mail@nevstokes.com>" \
     org.opencontainers.image.description="Verified latest source of PHP v$PHP_SRC_VERSION" \
+    org.opencontainers.image.version="$PHP_VERSION_FULL" \
     org.opencontainers.image.created=$BUILD_DATE \
     org.opencontainers.image.source=$VCS_URL \
     org.opencontainers.image.revision=$VCS_REF
