@@ -53,10 +53,6 @@ else
 
             if [ $IMAGE_NAME ]; then
                 docker push $DOCKER_REPO:$PHP_VERSION
-
-                if [ "$latestVersion" = "$PHP_VERSION" ]; then
-                    docker tag $DOCKER_REPO:$PHP_VERSION $DOCKER_REPO:latest
-                fi
             fi
         fi
 
