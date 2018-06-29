@@ -9,6 +9,8 @@ latestVersion=$(cat versioninfo | sed -E 's/^([0-9]+\.[0-9]+).*/\1/' | sort -rg 
 if [ $PHP_VERSION ]; then
     PHP_VERSION_FULL=$(grep -F $PHP_VERSION. versioninfo | cut -d ' ' -f 1)
 
+    docker pull nevstokes/php-src:$PHP_VERSION
+
     currentImageVersion=$(docker inspect --format "{{ index .Config.Labels \"org.opencontainers.image.version\" }}" nevstokes/php-src:$PHP_VERSION 2> /dev/null)
 
     if [ "$PHP_VERSION_FULL" = "$currentImageVersion" ]; then
@@ -31,6 +33,8 @@ else
 
     while read PHP_VERSION_FULL PHP_HASH ; do
         PHP_VERSION=$(echo $PHP_VERSION_FULL | sed -E 's/^([0-9]+\.[0-9]+).*/\1/')
+
+        docker pull nevstokes/php-src:$PHP_VERSION
 
         currentImageVersion=$(docker inspect --format "{{ index .Config.Labels \"org.opencontainers.image.version\" }}" nevstokes/php-src:$PHP_VERSION 2> /dev/null)
 
